@@ -1,0 +1,84 @@
+package com.hexaware.quitq.service.user;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.hexaware.quitq.dto.UserDTO;
+import com.hexaware.quitq.entity.UserInfo;
+import com.hexaware.quitq.exception.UserNotFoundException;
+import com.hexaware.quitq.repository.UserRepository;
+import com.hexaware.quitq.service.JwtService;
+import com.hexaware.quitq.service.cart.ICartService;
+
+@Service
+public class UserServiceImpl implements IUserService{
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	@Autowired
+	ICartService cartService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	JwtService jwtService;
+
+	@Override
+	public UserInfo findUserById(Long userId) throws UserNotFoundException {
+		
+		return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+	}
+
+	@Override
+	public String deleteUserById(Long userId) throws UserNotFoundException {
+		
+		userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
+		
+		userRepository.deleteById(userId);
+		
+		return "User with ID:"+userId+" deleted successfully.";
+	}
+	
+
+
+	@Override
+	public String registerUser(UserDTO user) {
+		
+		if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password cannot be null or blank");
+        }
+		
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserName(user.getUserName());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setPassword(passwordEncoder.encode(user.getPassword()));
+        userInfo.setGender(user.getGender());
+        userInfo.setContactNumber(user.getContactNumber());
+        userInfo.setCreatedAt(user.getCreatedAt());
+        userInfo.setRole(user.getRole());
+        
+        userRepository.save(userInfo);
+		return "Registered In successfully";
+	}
+
+	@Override
+	public List<UserInfo> getAllUser() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public UserInfo findUserProfileByJwt(String jwt) throws UserNotFoundException {
+		String userName = jwtService.extractUsername(jwt);
+		UserInfo userInfo = userRepository.findByUserName(userName);
+		if(userInfo == null) {
+			throw new UserNotFoundException();
+		}
+		return userInfo;
+	}
+
+}
