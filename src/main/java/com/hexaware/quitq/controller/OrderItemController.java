@@ -2,6 +2,8 @@ package com.hexaware.quitq.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +27,12 @@ public class OrderItemController {
 	@Autowired
 	ICartService cartService;
 	
+	Logger logger = LoggerFactory.getLogger(OrderItemController.class);
+	
 	@PostMapping("/create")
 	@PreAuthorize("hasAuthority('USER')")
 	public OrderItems createOrderItem(OrderItems orderItem) throws OrderItemNotFoundException {
+		logger.debug("Creating OrderItem: {}", orderItem);
 		return orderItemService.createOrderItem(orderItem);
 	}
 
@@ -36,6 +41,7 @@ public class OrderItemController {
 	@PreAuthorize("hasAuthority('USER')")
 	public List<OrderItems> createOrderItemsFromCart(@PathVariable Long cartId) throws CartNotFoundException{
 		Cart cart = cartService.findByCartId(cartId);
+		logger.info("OrderItems created for cartId: {}", cartId);
 		return orderItemService.createOrderItemsFromCart(cart);
 	}
 

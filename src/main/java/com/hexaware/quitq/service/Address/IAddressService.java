@@ -12,5 +12,5 @@ public interface IAddressService {
 	Address createAddress(AddressDTO address, String jwt) throws UserNotFoundException;
 	Address findAddressById(Long id) throws AddressNotFoundException;
 	ResponseEntity<String> deleteAddressById(Long Id) throws AddressNotFoundException;
-	Address updateAddress(Address address);
+	Address updateAddress(Long userId, AddressDTO addressDTO) throws UserNotFoundException;
 }

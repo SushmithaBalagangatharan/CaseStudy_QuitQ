@@ -9,7 +9,7 @@ import com.hexaware.quitq.entity.Product;
 
 public interface CartItemRepository extends JpaRepository<CartItems, Long> {
 	
-	@Query("SELECT ci FROM CartItems ci WHERE ci.cart.id = ?1 AND ci.product = ?2 AND ci.size = ?3 AND ci.cart.user.id = ?4")
-	public CartItems isCartItemExist(Long cartId, Product product, String size, Long userId);
+	@Query("SELECT ci FROM CartItems ci WHERE ci.cart.id = ?1 AND ci.product.id = ?2 AND ci.size = ?3 AND ci.cart.user.id = ?4")
+	public CartItems isCartItemExist(Long cartId, Long productId, String size, Long userId);
 
 }

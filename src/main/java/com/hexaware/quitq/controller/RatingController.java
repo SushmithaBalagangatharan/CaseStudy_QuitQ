@@ -2,6 +2,8 @@ package com.hexaware.quitq.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import com.hexaware.quitq.dto.RatingDTO;
 import com.hexaware.quitq.entity.Rating;
 import com.hexaware.quitq.entity.UserInfo;
 import com.hexaware.quitq.exception.ProductNotFoundException;
+import com.hexaware.quitq.exception.RatingNotFoundException;
 import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.service.rating.IRatingService;
 import com.hexaware.quitq.service.user.IUserService;
@@ -30,6 +33,8 @@ public class RatingController {
 	IRatingService ratingService;
 	@Autowired
 	IUserService userService;
+	
+	Logger logger = LoggerFactory.getLogger(RatingController.class);
 
 	@PostMapping("/create")
 	@PreAuthorize("hasAuthority('USER')")
@@ -38,20 +43,22 @@ public class RatingController {
 		String token = jwt.substring(7).trim();
 		System.out.println(jwt);
 		UserInfo userInfo = userService.findUserProfileByJwt(token);
+		logger.debug("Creating rating for userId: {}", userInfo.getId());
 		Rating rating = ratingService.createRating(ratingDTO, userInfo);
 		
 		return new ResponseEntity<Rating>(rating, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/product/{productId}")
-	public List<Rating> getProductsRating(@PathVariable Long productId) throws ProductNotFoundException {
+	public List<Rating> getProductsRating(@PathVariable Long productId) throws ProductNotFoundException, RatingNotFoundException {
 		
 		List<Rating> rating = ratingService.getProductsRating(productId);
+		
+		logger.info("Fetched {} ratings for productId: {}", rating.size(), productId);
+
 		return rating;
 	}
 		
-	
-	
 	
 	
 }

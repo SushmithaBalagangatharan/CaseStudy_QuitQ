@@ -51,7 +51,7 @@ public class Payment {
 	@JsonBackReference
 	private Orders order;
 	
-	 @ManyToOne(cascade = CascadeType.PERSIST)
+	 @ManyToOne
 	 @JoinColumn(name = "user_id")
 	 private UserInfo user;
 

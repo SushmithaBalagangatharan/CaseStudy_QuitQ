@@ -17,6 +17,7 @@ import com.hexaware.quitq.dto.RatingDTO;
 import com.hexaware.quitq.entity.Rating;
 import com.hexaware.quitq.entity.UserInfo;
 import com.hexaware.quitq.exception.ProductNotFoundException;
+import com.hexaware.quitq.exception.RatingNotFoundException;
 import com.hexaware.quitq.exception.UserNotFoundException;
 
 @SpringBootTest
@@ -62,7 +63,7 @@ class RatingServiceImplTest {
 	}
 
 	@Test
-	void getProductsRating() throws ProductNotFoundException{
+	void getProductsRating() throws ProductNotFoundException, RatingNotFoundException{
 		Long productId = 1L;
 		List<Rating> ratings = ratingService.getProductsRating(productId);
 		

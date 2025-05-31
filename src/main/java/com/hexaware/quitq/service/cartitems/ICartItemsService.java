@@ -15,7 +15,7 @@ public interface ICartItemsService {
 
 	CartItems createCartItem(Long userId, CartItemDTO cartItemDTO) throws ProductNotFoundException, CartNotFoundException, CartItemNotFoundException;
 	CartItems updateCartItem(Long userId, Long id, int quantity)  throws CartNotFoundException, CartItemNotFoundException, ProductNotFoundException;
-	CartItems isCartItemExists(Long cartId, Product product, String size, Long userId);
+	CartItems isCartItemExists(Long cartId, Long productId, String size, Long userId);
 	ResponseEntity<String> removeCartItem(Long userId, Long cartItemId) throws UserNotFoundException, CartNotFoundException, CartItemNotFoundException ;
 	CartItems findCartItemById(Long cartItemId) throws CartItemNotFoundException;
 	CartItems addCartItem(Long userId, CartItemDTO dto) throws ProductNotFoundException, CartNotFoundException, CartItemNotFoundException;

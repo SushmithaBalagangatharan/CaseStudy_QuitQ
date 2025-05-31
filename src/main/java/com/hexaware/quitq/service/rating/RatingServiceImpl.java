@@ -3,6 +3,8 @@ package com.hexaware.quitq.service.rating;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import com.hexaware.quitq.entity.Product;
 import com.hexaware.quitq.entity.Rating;
 import com.hexaware.quitq.entity.UserInfo;
 import com.hexaware.quitq.exception.ProductNotFoundException;
+import com.hexaware.quitq.exception.RatingNotFoundException;
 import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.repository.RatingRepository;
 import com.hexaware.quitq.service.product.IProductService;
@@ -25,6 +28,8 @@ public class RatingServiceImpl implements IRatingService {
 	IProductService productService;
 	@Autowired
 	IUserService userService;
+	
+	Logger logger = LoggerFactory.getLogger("RatingServiceImpl.class");
 
 	@Override
 	public Rating createRating(RatingDTO ratingDTO, UserInfo userInfo) throws ProductNotFoundException, UserNotFoundException {
@@ -39,16 +44,27 @@ public class RatingServiceImpl implements IRatingService {
 		userRatings.setCreatedAt(LocalDateTime.now());
 		
 	    product.setNumOfRatings(product.getNumOfRatings()+1);
-
+	    
+	   
+	    logger.info("Created ratings {}",userRatings );
 		return ratingRepository.save(userRatings);
 	}
 
 	@Override
-	public List<Rating> getProductsRating(Long productId) throws ProductNotFoundException {
+	public List<Rating> getProductsRating(Long productId) throws ProductNotFoundException, RatingNotFoundException {
 		
 		productService.findProductById(productId);
 		
-		return ratingRepository.findByProductId(productId);
+		List<Rating> ratingsList =  ratingRepository.findByProductId(productId);
+		
+		if(ratingsList.isEmpty()) 
+		{
+			throw new RatingNotFoundException();
+		}
+		
+		logger.info("Fetched product ratings {}", ratingsList);
+		
+		return ratingsList;
 	}
 
 }

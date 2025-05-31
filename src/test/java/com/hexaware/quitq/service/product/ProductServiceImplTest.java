@@ -19,8 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.hexaware.quitq.dto.ProductDTO;
 import com.hexaware.quitq.entity.Product;
 import com.hexaware.quitq.entity.Size;
+import com.hexaware.quitq.entity.UserInfo;
 import com.hexaware.quitq.exception.ProductNotFoundException;
+import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.repository.CategoryRepository;
+import com.hexaware.quitq.service.user.IUserService;
 
 @SpringBootTest
 class ProductServiceImplTest {
@@ -30,6 +33,9 @@ class ProductServiceImplTest {
 	
 	@Autowired
 	CategoryRepository categoryRepository;
+	
+	@Autowired
+	IUserService userService;
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -47,31 +53,34 @@ class ProductServiceImplTest {
 	void tearDown() throws Exception {
 	}
 
-//	@Test
-//	void createProduct() {
-//		ProductDTO productDTO = new ProductDTO();
-//		
-//		Set<Size> size = new HashSet<>();
-//		size.add(new Size("S", 10));
-//		size.add(new Size("M", 20));
-//		size.add(new Size("L", 20));
-//		
-//		productDTO.setTitle("Skaters");
-//		productDTO.setDescription("Holiday wear for womens");
-//		productDTO.setBrand("FashionWear");
-//		productDTO.setColor("Pink");
-//		productDTO.setImageUrl("https://example.com/images/skaters.png");
-//		productDTO.setTopLevelCategory("Clothing");
-//		productDTO.setSecondLevelCategory("Men");
-//		productDTO.setThirdLevelCategory("Jeans");
-//		productDTO.setPrice(3000);
-//		productDTO.setDiscountedPrice(1000);
-//		productDTO.setDiscountedPercent(80);
-//		productDTO.setQuantity(20);
-//		productDTO.setSize(size);
-//		
-//		assertNotNull(productService.createProduct(productDTO));
-//	}
+	@Test
+	void createProduct() throws UserNotFoundException {
+		ProductDTO productDTO = new ProductDTO();
+		
+		String jwt = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCb2IiLCJpYXQiOjE3NDg1OTEwNDQsImV4cCI6MTc0ODU5Mjg0NH0.DLb4KEjR9Yx-hEfQ14ieJDz7q90gQHclABhaCKKFsLI";
+		UserInfo user = userService.findUserProfileByJwt(jwt);
+		
+		Set<Size> size = new HashSet<>();
+		size.add(new Size("S", 10));
+		size.add(new Size("M", 20));
+		size.add(new Size("L", 20));
+		
+		productDTO.setTitle("Skaters");
+		productDTO.setDescription("Holiday wear for womens");
+		productDTO.setBrand("Deor");
+		productDTO.setColor("Pink");
+		productDTO.setImageUrl("https://example.com/images/skaters.png");
+		productDTO.setTopLevelCategory("Fashion");
+		productDTO.setSecondLevelCategory("Women");
+		productDTO.setThirdLevelCategory("Skaters");
+		productDTO.setPrice(3000);
+		productDTO.setDiscountedPrice(1000);
+		productDTO.setDiscountedPercent(80);
+		productDTO.setQuantity(20);
+		productDTO.setSize(size);
+		
+		assertNotNull(productService.createProduct(user, productDTO));
+	}
 
 	@Test
 	void findProductById() throws ProductNotFoundException {

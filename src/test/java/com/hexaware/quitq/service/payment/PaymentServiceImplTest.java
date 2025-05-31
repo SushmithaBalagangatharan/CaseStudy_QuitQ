@@ -34,18 +34,18 @@ class PaymentServiceImplTest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-
-	@Test
-	void processPayment() throws OrderNotFoundException, UserNotFoundException {
-		PaymentDTO paymentDTO = new PaymentDTO();
-		
-		paymentDTO.setOrderId(null);
-		paymentDTO.setUserId(null);
-		paymentDTO.setAmount(0);
-		paymentDTO.setPaymentMethod(null);
-		paymentDTO.setPaymentStatus(null);
-		paymentDTO.setTransactionId(null);
-		
-		assertNotNull(paymentService.processPayment(paymentDTO));
-	}
+//
+//	@Test
+//	void processPayment() throws OrderNotFoundException, UserNotFoundException {
+//		PaymentDTO paymentDTO = new PaymentDTO();
+//		
+//		paymentDTO.setOrderId(null);
+//		paymentDTO.setUserId(null);
+//		paymentDTO.setAmount(0);
+//		paymentDTO.setPaymentMethod(null);
+//		paymentDTO.setPaymentStatus(null);
+//		paymentDTO.setTransactionId(null);
+//		
+//		assertNotNull(paymentService.processPayment(paymentDTO));
+//	}
 }

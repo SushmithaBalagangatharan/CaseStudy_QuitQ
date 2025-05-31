@@ -3,6 +3,8 @@ package com.hexaware.quitq.service.reviews;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class ReviewsServiceImpl implements IReviewService {
 	@Autowired
 	IUserService userService;
 
+	Logger logger = LoggerFactory.getLogger("ReviewsServiceImpl.class");
 	@Override
 	public Reviews createReviews(ReviewsDTO reviewsDTO, UserInfo user) throws ProductNotFoundException {
 		Product product = productService.findProductById(reviewsDTO.getProductId());
@@ -36,12 +39,15 @@ public class ReviewsServiceImpl implements IReviewService {
 		review.setUser(user);
 		review.setReview(reviewsDTO.getReview());
 		review.setCreatedAt(LocalDateTime.now());
+		
+		logger.info("Created review for user {}", user);
 		return reviewRepository.save(review);
 	}
 
 	@Override
 	public List<Reviews> getProductReviews(Long productId) throws ProductNotFoundException {
 		
+		logger.info("Fetching product review for product Id {}", productId);
 		return reviewRepository.findByProductId(productId);
 	}
 
@@ -51,17 +57,21 @@ public class ReviewsServiceImpl implements IReviewService {
 		
 		reviewRepository.deleteById(reviewId);
 		
+		logger.warn("Deleted review by review ID {}", reviewId);
 		return "Review deleted successfully!";
 	}
 	
 	@Override
 	public List<Reviews> getReviewByUserId(Long userId) throws UserNotFoundException{
 		userService.findUserById(userId);
+		
+		logger.info("Got review by user ID {}", userId);
 		return reviewRepository.findByUserId(userId);
 	}
 
 	@Override
 	public Reviews getReviewById(Long reviewId) throws ReviewNotFoundException {
+		logger.info("Got review by review ID {}", reviewId);
 		return reviewRepository.findById(reviewId).orElseThrow(() -> new ReviewNotFoundException());
 	}
 }

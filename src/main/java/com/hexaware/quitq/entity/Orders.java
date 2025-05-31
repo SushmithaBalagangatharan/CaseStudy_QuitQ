@@ -35,7 +35,7 @@ public class Orders {
 	
 	private LocalDateTime createdAt;
 	
-	@Pattern(regexp = "CANCEL|DELIVERED|PENDING|PLACED|SHIPPED")
+	@Pattern(regexp = "CANCEL|DELIVERED|PENDING|PLACED|SHIPPED|CONFIRMED")
 	private String orderStatus;
 	
 	private Integer totalPrice;	
@@ -64,11 +64,11 @@ public class Orders {
 	@ManyToOne
 	private UserInfo user;
 	
-	@OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<OrderItems> orderItems = new ArrayList<>();
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JsonManagedReference
 	@JoinColumn(name = "payment_id")
 	private Payment payment;

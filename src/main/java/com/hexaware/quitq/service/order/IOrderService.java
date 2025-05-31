@@ -20,7 +20,7 @@ public interface IOrderService {
 	
 	List<Orders> userOrderHistory(Long userId);
 	
-	List<Orders> findOrdersBySellerId(Long sellerId);
+	List<Orders> findOrdersByUserId(Long userId);
 		
 	
 	Orders placedOrder(Long orderId) throws OrderNotFoundException; // to place order
@@ -33,7 +33,7 @@ public interface IOrderService {
 	
 	Orders canceledOrder(Long orderId) throws OrderNotFoundException; // to set order status to "canceled"
 	
-	List<Orders> getAllOrders();
+	List<OrderDTO> getAllOrders();
 	
 	void deleteOrder(Long orderId) throws OrderNotFoundException;
 

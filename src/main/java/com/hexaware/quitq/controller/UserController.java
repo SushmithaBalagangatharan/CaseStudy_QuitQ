@@ -2,6 +2,8 @@ package com.hexaware.quitq.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +41,8 @@ public class UserController {
     @Autowired
     JwtService jwtService;
     
+    Logger logger = LoggerFactory.getLogger("UserController.class");
+    
     @GetMapping("/message")
     public String getMessage() {
     	return "Hello all";
@@ -47,6 +51,7 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@RequestBody UserDTO user) {
     	System.out.println("Received password: " + user.getPassword());
+    	logger.info("Registering user");
     	return userService.registerUser(user);
     }
     
@@ -69,12 +74,13 @@ public class UserController {
 
 		} else {
 
-			System.out.println("invalid");
+			logger.error("Invalid user");
 
 			throw new UsernameNotFoundException("UserName or Password in Invalid / Invalid Request");
 
 		}
 
+		logger.info("Logging user in");
 		return token;
 	}
    
@@ -82,12 +88,14 @@ public class UserController {
    @GetMapping("/profile")
    @PreAuthorize("hasAnyAuthority('ADMIN , SELLER')")
    public UserInfo getUserProfile(@RequestHeader("Authorization") String jwt) throws UserNotFoundException {
+	logger.debug("Fetching user profile");
 	   return userService.findUserProfileByJwt(jwt);
    }
 	
    @DeleteMapping("/deletebyid/{userId}")
    @PreAuthorize("hasAuthority('ADMIN')")
    public String deleteUserById(@PathVariable Long userId) throws UserNotFoundException {
+	  logger.warn("Deleting user with user ID: {}", userId);
 	   return userService.deleteUserById(userId);
    }
 	
@@ -95,6 +103,7 @@ public class UserController {
    @GetMapping("/getall")
    @PreAuthorize("hasAuthority('ADMIN')")
    public List<UserInfo> getAllUsers(){
+	   logger.warn("Fetching all user");
 	   return userService.getAllUser();
    }
    
