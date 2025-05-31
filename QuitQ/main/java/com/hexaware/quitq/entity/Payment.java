@@ -1,9 +1,11 @@
 package com.hexaware.quitq.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,13 +23,16 @@ public class Payment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private Date paymentDate;
+	private LocalDateTime paymentDate;
+	
 	@NotBlank
 	private String paymentMethod;
 	
 	@NotBlank
 	@Pattern(regexp="PAID|PENDING|CANCELED|FAILED")
 	private String status; //paid, failed, pending
+	
+	@Column(nullable = false)
 	private double amount;
 	private String transactionId;
 	
@@ -59,11 +64,13 @@ public class Payment {
 		this.id = id;
 	}
 
-	public Date getPaymentDate() {
+	
+
+	public LocalDateTime getPaymentDate() {
 		return paymentDate;
 	}
 
-	public void setPaymentDate(Date paymentDate) {
+	public void setPaymentDate(LocalDateTime paymentDate) {
 		this.paymentDate = paymentDate;
 	}
 

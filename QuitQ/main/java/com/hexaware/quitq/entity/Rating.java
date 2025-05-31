@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 
 @Entity
 public class Rating {
@@ -20,6 +22,8 @@ public class Rating {
 	@Column(name="id")
 	private Long ratingId;
 	
+	@DecimalMin("0.0")
+	@DecimalMax("5.0")
 	private Double rating;
 	
 	private LocalDateTime createdAt;
@@ -30,7 +34,7 @@ public class Rating {
 	private UserInfo user;
 	
 	@ManyToOne
-	@JsonBackReference
+	@JsonBackReference("product-rating")
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 	

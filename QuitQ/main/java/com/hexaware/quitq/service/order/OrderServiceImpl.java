@@ -1,27 +1,36 @@
 package com.hexaware.quitq.service.order;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.hexaware.quitq.dto.OrderDTO;
 import com.hexaware.quitq.entity.Address;
 import com.hexaware.quitq.entity.Cart;
 import com.hexaware.quitq.entity.OrderItems;
 import com.hexaware.quitq.entity.Orders;
 import com.hexaware.quitq.entity.Payment;
 import com.hexaware.quitq.entity.UserInfo;
+import com.hexaware.quitq.exception.CartItemNotFoundException;
 import com.hexaware.quitq.exception.CartNotFoundException;
 import com.hexaware.quitq.exception.OrderNotFoundException;
 import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.repository.AddressRepository;
 import com.hexaware.quitq.repository.CartRepository;
+import com.hexaware.quitq.repository.OrderItemRepository;
 import com.hexaware.quitq.repository.OrderRepository;
 import com.hexaware.quitq.repository.UserRepository;
 import com.hexaware.quitq.service.cart.ICartService;
-import com.hexaware.quitq.service.orderitem.IOrderItemService;
+import com.hexaware.quitq.service.orderitem.IOrderItemService; 
 
+
+@Transactional
 @Service
 public class OrderServiceImpl implements IOrderService{
 	@Autowired
@@ -33,24 +42,79 @@ public class OrderServiceImpl implements IOrderService{
 	OrderRepository orderRepository;
 
 	@Autowired
+	OrderItemRepository orderItemRepository;
+	
+	@Autowired
 	AddressRepository addressRepository;
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
 	CartRepository cartRepository;
-
+	
+	
+	Logger logger = LoggerFactory.getLogger("OrderServiceImpl.class");
+//	@Transactional(rollbackFor = Exception.class)
 	@Override
-	public Orders createOrder(UserInfo user, Address shippingAddress) throws CartNotFoundException, UserNotFoundException {
-		//UserInfo user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
-		shippingAddress.setUser(user);
-		//Address address = addressRepository.save(shippingAddress);
-		
-		user.setAddress(shippingAddress);
-		UserInfo savedUser = userRepository.save(user);
-		
+	public OrderDTO createOrderUser(UserInfo user) throws CartNotFoundException, CartItemNotFoundException {
+			Cart cart = cartService.findUserCart(user.getId());
+			
+			LocalDateTime now = LocalDateTime.now();
+			
+			Orders createdOrder = new Orders();
+			createdOrder.setUser(user);
+		    createdOrder.setTotalPrice(cart.getTotalPrice());
+		    createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountPrice());
+		    createdOrder.setDiscount(cart.getDiscount());
+		    createdOrder.setTotalItem(cart.getTotalItem());
+		    createdOrder.setShippingAddress(user.getAddress());
+		    createdOrder.setOrderDate(now);
+		    createdOrder.setOrderStatus("PENDING");
+		    createdOrder.setCreatedAt(now);
+		    createdOrder.setTrackingId("TRK"+System.currentTimeMillis());
+		    createdOrder.setDeliveryDate(now.plusDays(3));
+		    
+		    String generatedOrderId = "ORD-"+ System.currentTimeMillis();
+		    createdOrder.setOrderId(generatedOrderId);
+		    
+		    Payment payment = new Payment();
+		    payment.setStatus("PENDING");
+		    payment.setUser(user);
+		    payment.setPaymentMethod("CASH");
+		    
+		    createdOrder.setPayment(payment);	
+		    
+		    Orders savedOrder = orderRepository.save(createdOrder);
+		    
+		    List<OrderItems> orderItems = orderItemService.createOrderItemsFromCart(cart);
+		    
+		    for (OrderItems item : orderItems) {
+		        item.setOrder(savedOrder);
+		    }
+		    
+		    orderItems = orderItemRepository.saveAll(orderItems);
+		    	    
+		    
+		    savedOrder.setOrderItems(orderItems);
+		    savedOrder = orderRepository.save(savedOrder);
+		    
+		    cart.getCartItemsList().clear();
+		    cartRepository.save(cart);
+		    
+		    logger.info("Created and saved order with order ID {}", savedOrder.getId());
+			return getOrderDTO(savedOrder);
+	}
+
+	//accepts new address , not saved in address table
+	@Override
+	public OrderDTO createOrder(UserInfo user, Address shippingAddress) throws CartNotFoundException, UserNotFoundException, CartItemNotFoundException {
+				
+		userRepository.findById(null).orElseThrow(() -> new UserNotFoundException());
 		
 		Cart cart = cartService.findUserCart(user.getId());
-	//	List<OrderItems> orderItems = new ArrayList<>();
+		
+		addressRepository.save(shippingAddress);
+		
+		LocalDateTime now = LocalDateTime.now();
 		
 		Orders createdOrder = new Orders();
 		createdOrder.setUser(user);
@@ -58,30 +122,32 @@ public class OrderServiceImpl implements IOrderService{
 	    createdOrder.setTotalDiscountedPrice(cart.getTotalDiscountPrice());
 	    createdOrder.setDiscount(cart.getDiscount());
 	    createdOrder.setTotalItem(cart.getTotalItem());
-	    createdOrder.setShippingAddress(savedUser.getAddress());
-	    createdOrder.setOrderDate(LocalDateTime.now());
+	    createdOrder.setShippingAddress(shippingAddress);
+	    createdOrder.setOrderDate(now);
 	    createdOrder.setOrderStatus("PENDING");
-	    createdOrder.setCreatedAt(LocalDateTime.now());
+	    createdOrder.setCreatedAt(now);
+	    createdOrder.setTrackingId("TRK"+System.currentTimeMillis());
+	    createdOrder.setDeliveryDate(now.plusDays(3));
+	    
+	    String generatedOrderId = "ORD-"+ System.currentTimeMillis();
+	    createdOrder.setOrderId(generatedOrderId);
 	    
 	    Payment payment = new Payment();
 	    payment.setStatus("PENDING");
-	    createdOrder.setPayment(payment);
-		
+	    payment.setUser(user);
+	    payment.setPaymentMethod("CASH");
+	    createdOrder.setPayment(payment);	
+	    
 	    Orders savedOrder = orderRepository.save(createdOrder);
 	    
-//	    for(CartItems cartItem : cart.getCartItemsList()) {
-//	    	OrderItems orderItem = new OrderItems();
-//	    	orderItem.setPrice(cartItem.getPrice());
-//            orderItem.setProduct(cartItem.getProduct());
-//            orderItem.setQuantity(cartItem.getQuantitiy());
-//            orderItem.setSize(cartItem.getSize());
-//            orderItem.setDiscountedPrice(cartItem.getDiscountPrice());
-//            
-//            OrderItems savedOrderItems = orderItemRepository.save(orderItem);
-//            orderItems.add(savedOrderItems);
-//	    }
-	    
 	    List<OrderItems> orderItems = orderItemService.createOrderItemsFromCart(cart);
+	    
+	    for (OrderItems item : orderItems) {
+	        item.setOrder(savedOrder);
+	    }
+	    
+	    orderItems = orderItemRepository.saveAll(orderItems);
+	    	    
 	    
 	    savedOrder.setOrderItems(orderItems);
 	    savedOrder = orderRepository.save(savedOrder);
@@ -89,23 +155,28 @@ public class OrderServiceImpl implements IOrderService{
 	    cart.getCartItemsList().clear();
 	    cartRepository.save(cart);
 	    
-		return savedOrder;
+	    logger.info("Created and saved order with order ID {} and shipping address {}", savedOrder.getId(), shippingAddress);
+		return getOrderDTO(savedOrder);
 	}
 
 	@Override
 	public Orders findOrderById(Long orderId) throws OrderNotFoundException {
 		
-		return orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
+		Orders order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
+		
+		logger.info("Found order by id {}", order);
+		return order;
 	}
 	
 	@Override
-	public List<Orders> findOrdersBySellerId(Long sellerId){
-		return orderRepository.findOrdersBySellerId(sellerId);
+	public List<Orders> findOrdersByUserId(Long userId){
+		logger.info("Found order by user id {}", userId);
+		return orderRepository.findOrdersBySellerId(userId);
 	}
 
 	@Override
 	public List<Orders> userOrderHistory(Long userId) {
-		
+		logger.info("Found user order history with user ID {}", userId);
 		return orderRepository.findUserOrders(userId);
 	}
 
@@ -114,13 +185,17 @@ public class OrderServiceImpl implements IOrderService{
 		Orders order = orderRepository.findById(orderId).orElseThrow(()-> new OrderNotFoundException());
 		order.setOrderStatus("PLACED");
 		order.getPayment().setStatus("PAID");
-		return order;
+		
+		logger.info("Placed order with order ID {}", orderId);
+		return orderRepository.save(order);
 	}
 
 	@Override
 	public Orders confirmedOrder(Long orderId) throws OrderNotFoundException {
 		Orders order = orderRepository.findById(orderId).orElseThrow(()-> new OrderNotFoundException());
 		order.setOrderStatus("CONFIRMED");
+		
+		logger.info("Confirmed order with order ID {}", orderId);
 		return orderRepository.save(order);
 	}
 
@@ -128,6 +203,8 @@ public class OrderServiceImpl implements IOrderService{
 	public Orders shippedOrder(Long orderId) throws OrderNotFoundException {
 		Orders order = orderRepository.findById(orderId).orElseThrow(()-> new OrderNotFoundException());
 		order.setOrderStatus("SHIPPED");
+		
+		logger.info("Shipped order with order ID {}", orderId);
 		return orderRepository.save(order);
 	}
 
@@ -135,6 +212,8 @@ public class OrderServiceImpl implements IOrderService{
 	public Orders deliveredOrder(Long orderId) throws OrderNotFoundException {
 		Orders order = orderRepository.findById(orderId).orElseThrow(()-> new OrderNotFoundException());
 		order.setOrderStatus("DELIVERED");
+		
+		logger.info("Delivered order with order ID {}", orderId);
 		return orderRepository.save(order);
 	}
 
@@ -142,19 +221,58 @@ public class OrderServiceImpl implements IOrderService{
 	public Orders canceledOrder(Long orderId) throws OrderNotFoundException {
 		Orders order = orderRepository.findById(orderId).orElseThrow(()-> new OrderNotFoundException());
 		order.setOrderStatus("CANCEL");
+		
+		logger.info("Canceled order with order ID {}", orderId);
 		return orderRepository.save(order);
 	}
 
 	@Override
-	public List<Orders> getAllOrders() {
-		return orderRepository.findAll();
+	public List<OrderDTO> getAllOrders() {
+		List<Orders> orderList = orderRepository.findAll();
+		List<OrderDTO> orderDTOList = new ArrayList<>();
+		for(Orders order : orderList) {
+			orderDTOList.add(getOrderDTO(order));
+		}
+		
+		logger.info("Fetching all orders");
+		return orderDTOList;
 	}
 
 	@Override
 	public void deleteOrder(Long orderId) throws OrderNotFoundException {
 		Orders order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException());
 		orderRepository.delete(order);
+		logger.info("Deleted order with order ID {}", orderId);
+	}
+	
+	public OrderDTO getOrderDTO(Orders order) {
+		OrderDTO orderDTO = new OrderDTO();
 		
+		orderDTO.setOrderId(order.getOrderId());
+		orderDTO.setCreatedAt(order.getCreatedAt());
+		orderDTO.setOrderStatus(order.getOrderStatus());
+		orderDTO.setTotalPrice(order.getTotalPrice());
+		orderDTO.setTrackingId(order.getTrackingId());
+		orderDTO.setTotalItem(order.getTotalItem());
+		
+		return orderDTO;
 	}
 
+//    for(CartItems cartItem : cart.getCartItemsList()) {
+//	OrderItems orderItem = new OrderItems();
+//	orderItem.setPrice(cartItem.getPrice());
+//    orderItem.setProduct(cartItem.getProduct());
+//    orderItem.setQuantity(cartItem.getQuantitiy());
+//    orderItem.setSize(cartItem.getSize());
+//    orderItem.setDiscountedPrice(cartItem.getDiscountPrice());
+//    
+//    OrderItems savedOrderItems = orderItemRepository.save(orderItem);
+//    orderItems.add(savedOrderItems);
+//}
+	
+	
+//	orderId → a unique, human-readable, business-specific ID that is:
+//		shown in the UI
+//		included in invoices or confirmation emails
+//		used by customers or support staff to track or reference orders
 }

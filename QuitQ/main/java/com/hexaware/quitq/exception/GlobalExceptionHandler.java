@@ -53,5 +53,10 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> userExceptionHandler(){
 		return new ResponseEntity<String>("User does not exist!", HttpStatus.NOT_FOUND);
 	}
+	
+	@ExceptionHandler(RatingNotFoundException.class)
+	public ResponseEntity<String> ratingExceptionHandler(){
+		return new ResponseEntity<String>("Ratings for the product does not exist!", HttpStatus.NOT_FOUND);
+	}
 
 }

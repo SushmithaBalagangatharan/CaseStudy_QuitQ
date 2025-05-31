@@ -2,6 +2,8 @@ package com.hexaware.quitq.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,37 +29,48 @@ public class PaymentController {
 	
 	@Autowired
 	IPaymentService paymentService;
+	
+	Logger logger = LoggerFactory.getLogger("PaymentController.class");
 
 	@PostMapping("/process")
-	public  ResponseEntity<String> processPayment(@RequestBody PaymentDTO paymentDTO) throws OrderNotFoundException, UserNotFoundException {
+	@PreAuthorize("hasAuthority('USER')")
+	public  ResponseEntity<String> processPayment(@RequestBody PaymentDTO paymentDTO) 
+			throws OrderNotFoundException, UserNotFoundException, PaymentNotFoundException {
+	    logger.debug("Processing payment for DTO: {}", paymentDTO);
 		paymentService.processPayment(paymentDTO);
-		
+		logger.info("Payment processed successfully");
 		return new ResponseEntity<String>("Payment processed", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/byid/{paymentId}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public Payment getPaymentById(@PathVariable Long paymentId) throws PaymentNotFoundException{
+		logger.info("Fetching payment with payment ID: {}", paymentId);
 		return paymentService.getPaymentById(paymentId);
 	}
 	
 	@GetMapping("/getall/{userId}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public List<Payment> getPaymentsByUserId(@PathVariable Long userId){
+		logger.debug("Fetching payment with user ID: {}", userId);
 		return paymentService.getPaymentsByUserId(userId);
 	}
 	
 	@PutMapping("/update/{paymentId}/{status}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public Payment updatePaymentStatus(@PathVariable Long paymentId, String status) throws PaymentNotFoundException {
+		logger.debug("Fetching payment with payment ID: {} and with status: {}", paymentId);
 		return paymentService.updatePaymentStatus(paymentId, status);
 	}
+	
 	
 	@PutMapping("/cancel/{paymentId}")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public String cancelPayment(@PathVariable Long paymentId) throws PaymentNotFoundException {
 		String message = paymentService.cancelPayment(paymentId);
+		logger.warn("Cancel result: {}", message);
 		return message;
 	}
+	
 }
 

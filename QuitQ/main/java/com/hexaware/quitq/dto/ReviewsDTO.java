@@ -1,25 +1,17 @@
 package com.hexaware.quitq.dto;
 
-import java.time.LocalDateTime;
-
 public class ReviewsDTO {
 	 	private Long productId;
 	    private String review;
-	    private LocalDateTime createdAt;
 
 	    public ReviewsDTO() {
 	    }
-	    
-	    
 
-		public ReviewsDTO(Long productId, String review, LocalDateTime createdAt) {
+		public ReviewsDTO(Long productId, String review) {
 			super();
 			this.productId = productId;
-			this.review = review;
-			this.createdAt = createdAt;
+			this.review = review;	
 		}
-
-
 
 		public Long getProductId() {
 			return productId;
@@ -35,16 +27,6 @@ public class ReviewsDTO {
 
 		public void setReview(String review) {
 			this.review = review;
-		}
-
-
-		public LocalDateTime getCreatedAt() {
-			return createdAt;
-		}
-
-
-		public void setCreatedAt(LocalDateTime createdAt) {
-			this.createdAt = createdAt;
 		}
 
 	    

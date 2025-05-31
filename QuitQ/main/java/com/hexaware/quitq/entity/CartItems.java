@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,23 +20,22 @@ public class CartItems {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
 	private Long cartItemsId;
 	
-	@Positive
-	private Integer quantitiy;
+	@Positive(message = "Quantity must be greater than 0")
+	private Integer quantity;
+	
 	private Integer price;
 	private Integer discountPrice;
 	private String size;
 	
 	@ManyToOne
-	@JsonBackReference
 	@JoinColumn(name="cart_id", nullable=false)
+	@JsonBackReference
 	private Cart cart;
 	
 	@ManyToOne
-	@JsonBackReference
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 
 	public CartItems() {
@@ -46,7 +46,7 @@ public class CartItems {
 			Product product) {
 		super();
 		this.cartItemsId = cartItemsId;
-		this.quantitiy = quantitiy;
+		this.quantity = quantitiy;
 		this.price = price;
 		this.discountPrice = discountPrice;
 		this.size = size;
@@ -63,11 +63,11 @@ public class CartItems {
 	}
 
 	public Integer getQuantitiy() {
-		return quantitiy;
+		return quantity;
 	}
 
 	public void setQuantitiy(Integer quantitiy) {
-		this.quantitiy = quantitiy;
+		this.quantity = quantitiy;
 	}
 
 	public Integer getPrice() {

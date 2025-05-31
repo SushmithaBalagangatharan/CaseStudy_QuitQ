@@ -9,7 +9,7 @@ import com.hexaware.quitq.exception.PaymentNotFoundException;
 import com.hexaware.quitq.exception.UserNotFoundException;
 
 public interface IPaymentService {
-	Payment processPayment(PaymentDTO paymentRequest) throws OrderNotFoundException, UserNotFoundException;
+	Payment processPayment(PaymentDTO paymentRequest) throws OrderNotFoundException, UserNotFoundException, PaymentNotFoundException;
 
     Payment getPaymentById(Long paymentId) throws PaymentNotFoundException;
 

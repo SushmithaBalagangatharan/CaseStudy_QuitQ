@@ -16,6 +16,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -25,33 +26,46 @@ import jakarta.validation.constraints.Size;
 public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
 	private Long categoryId;
 	
+	public List<Category> getSubcategories() {
+		return subcategories;
+	}
+
+	public void setSubcategories(List<Category> subcategories) {
+		this.subcategories = subcategories;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
 	@Size(min=2, max=50, message = "name should be atleast 2 character")
-	@NotNull
-	private String name; // toplevel, secondlevel, thirdlevel
+	@NotBlank(message="Name is required")
+	private String name; 
 	
 	private String description;
 	
 	@PositiveOrZero
-	public int level;
+	private int level;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JsonBackReference
 	private List<Product> productList = new ArrayList<>();
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="parent_categry_id")
+	@JoinColumn(name="parent_category_id")
 	private Category parentCategory;
+	
+	@OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonBackReference
+	private List<Category> subcategories = new ArrayList<>();
 	
 	public Category() {
 		super();
 	}
 
-	public Category(long categoryId,
-			@Size(min = 2, max = 50, message = "aname should be atleast 2 character") @NotNull String name,
-			String description, int level, List<Product> productList, Category parentCategory) {
+	public Category(long categoryId, String name,String description, int level, List<Product> productList, Category parentCategory) {
 		super();
 		this.categoryId = categoryId;
 		this.name = name;

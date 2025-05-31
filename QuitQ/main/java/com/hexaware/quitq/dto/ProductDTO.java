@@ -21,7 +21,9 @@ public class ProductDTO {
     private Integer quantity;
     private Set<Size> size = new HashSet<>();
     
-    
+    public ProductDTO() {
+    	
+    }
     
 	public ProductDTO(String title, String description, String brand, String color, String imageUrl,
 			String topLevelCategory, String secondLevelCategory, String thirdLevelCategory, Integer price,

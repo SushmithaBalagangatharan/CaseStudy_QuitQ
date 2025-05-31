@@ -6,12 +6,13 @@ import org.springframework.data.domain.Page;
 
 import com.hexaware.quitq.dto.ProductDTO;
 import com.hexaware.quitq.entity.Product;
+import com.hexaware.quitq.entity.UserInfo;
 import com.hexaware.quitq.exception.ProductNotFoundException;
 
 public interface IProductService {
 	
 	//product req
-	Product createProduct(ProductDTO dto);
+	Product createProduct(UserInfo user, ProductDTO dto);
 
 	String deleteProduct(Long productId) throws ProductNotFoundException;
 	

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,13 +23,13 @@ public class Reviews {
 	private String review;
 	private LocalDateTime createdAt;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonBackReference("user-review")
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserInfo user;
 	
-	@ManyToOne
-	@JsonBackReference
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonBackReference("product-review")
 	@JoinColumn(name = "product_id", nullable = false)
 	private Product product;
 	

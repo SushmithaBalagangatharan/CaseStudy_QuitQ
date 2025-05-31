@@ -62,7 +62,7 @@ class ReviewsServiceImplTest {
 	    String review = "Excellent";
 	    LocalDateTime createdAt = LocalDateTime.now();
 	    
-	    ReviewsDTO reviewDTO = new ReviewsDTO(productId, review, createdAt);
+	    ReviewsDTO reviewDTO = new ReviewsDTO(productId, review);
 	    
 	    UserInfo user = userService.findUserById(2L);
 	    

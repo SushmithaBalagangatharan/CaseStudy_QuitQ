@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,7 +51,7 @@ public class Product {
 	private Set<Size> sizes = new HashSet<>();
 	
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	@JsonBackReference
+	@JsonBackReference("product-rating")
 	private List<Rating> ratings = new ArrayList<>();
 	
 	@ManyToOne
@@ -59,8 +59,7 @@ public class Product {
 	private UserInfo user; //seller
 	
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-	@JsonIgnore
-	@JsonBackReference
+	@JsonBackReference("product-review")
 	private List<Reviews> review = new ArrayList<>();
 	
 	@ManyToOne

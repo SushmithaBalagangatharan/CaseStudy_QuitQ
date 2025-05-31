@@ -13,7 +13,7 @@ import com.hexaware.quitq.entity.Product;
 public interface ProductRepository  extends JpaRepository<Product, Long>{
 
 	@Query("SELECT p FROM Product p WHERE p.category.name = :category")
-	public List<Product> findProductByCategory(@Param("category") String category);
+	public List<Product> getProductByCategory(@Param("category") String category);
 	
 	
 //	@Query("SELECT p FROM Product p " +

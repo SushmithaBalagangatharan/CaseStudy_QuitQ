@@ -29,12 +29,13 @@ public class Orders {
 	@Column(name="id")
 	private Long id;
 	
+	//for order identification business purpose
 	@Column(name = "order_id", unique = true, nullable = false)
     private String orderId;
 	
 	private LocalDateTime createdAt;
 	
-	@Pattern(regexp = "CANCEL|DELIVERED|PENDING|PLACED|SHIPPED")
+	@Pattern(regexp = "CANCEL|DELIVERED|PENDING|PLACED|SHIPPED|CONFIRMED")
 	private String orderStatus;
 	
 	private Integer totalPrice;	
@@ -67,10 +68,10 @@ public class Orders {
 	@JsonBackReference
 	private List<OrderItems> orderItems = new ArrayList<>();
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JsonManagedReference
 	@JoinColumn(name = "payment_id")
-	private Payment payment = new Payment();
+	private Payment payment;
 	
 	
 	public Orders() {

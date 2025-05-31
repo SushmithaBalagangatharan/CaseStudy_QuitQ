@@ -32,8 +32,11 @@ public class UserInfo {
 	
 //	@Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
 	private String password;
+	
 	private String gender;
+	
 	private Long contactNumber;
+	
 	private LocalDate createdAt;
 	
 	@Pattern(regexp="ADMIN|USER|SELLER")
@@ -45,7 +48,6 @@ public class UserInfo {
 	private List<Orders> orderList = new ArrayList<>();
 	
 	@OneToOne(mappedBy = "user" , cascade = CascadeType.ALL)
-//	@JoinColumn(name = "address_id")
 	@JsonManagedReference("user-address")
     private Address address;
    
@@ -54,7 +56,7 @@ public class UserInfo {
 	@JsonManagedReference("user-rating")
 	private List<Rating> rating = new ArrayList<>();
 	
-	@OneToMany
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonManagedReference("user-payment")
 	private List<Payment> payment = new ArrayList<>();
 	
@@ -65,9 +67,6 @@ public class UserInfo {
 	public UserInfo() {
 		
 	}
-	
-	
-
 	
 
 	public UserInfo(Long id,
@@ -91,9 +90,6 @@ public class UserInfo {
 		this.payment = payment;
 		this.review = review;
 	}
-
-
-
 
 
 	public List<Payment> getPayment() {

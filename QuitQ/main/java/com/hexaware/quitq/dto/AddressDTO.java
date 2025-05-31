@@ -2,20 +2,30 @@ package com.hexaware.quitq.dto;
 
 public class AddressDTO {
 	
-	private Long addressId;
 	private String firstName;
 	private String lastName;
 	private String streetAddress;
 	private String city;
 	private String state;
 	private String zipCode;
-	private Long userId;
 	private String contactNumber;
-	public Long getAddressId() {
-		return addressId;
+	
+	
+	
+	public AddressDTO() {
+		super();
 	}
-	public void setAddressId(Long addressId) {
-		this.addressId = addressId;
+	public AddressDTO(String firstName, String lastName, String streetAddress, String city, String state,
+			String zipCode, String contactNumber) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.streetAddress = streetAddress;
+		this.city = city;
+		this.state = state;
+		this.zipCode = zipCode;
+		
+		this.contactNumber = contactNumber;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -53,12 +63,7 @@ public class AddressDTO {
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
 	}
-	public Long getUserId() {
-		return userId;
-	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+
 	public String getContactNumber() {
 		return contactNumber;
 	}

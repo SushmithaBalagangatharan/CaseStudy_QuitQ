@@ -1,5 +1,7 @@
 package com.hexaware.quitq.service.cartitems;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -13,7 +15,6 @@ import com.hexaware.quitq.entity.Product;
 import com.hexaware.quitq.exception.CartItemNotFoundException;
 import com.hexaware.quitq.exception.CartNotFoundException;
 import com.hexaware.quitq.exception.ProductNotFoundException;
-import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.repository.CartItemRepository;
 import com.hexaware.quitq.service.cart.ICartService;
 import com.hexaware.quitq.service.product.IProductService;
@@ -32,45 +33,81 @@ public class CartItemsServiceImpl implements ICartItemsService {
 	@Autowired
 	IProductService productService;
 	
+	Logger logger = LoggerFactory.getLogger("CartItemServiceImpl.class");
+	
+//quantity, size, cart_id
 	@Override
-	public CartItems createCartItem(CartItems cartItem) {
+	public CartItems createCartItem(Long userId, CartItemDTO cartItemDTO) throws ProductNotFoundException, CartItemNotFoundException, CartNotFoundException {
 		
-		cartItem.setPrice(cartItem.getPrice() * cartItem.getQuantitiy());
-		cartItem.setDiscountPrice(cartItem.getProduct().getDiscountedPrice() * cartItem.getQuantitiy());;
-		return cartItemRepository.save(cartItem);
-	}
+		logger.info("Creating cart item for userId={}, productId={}", userId, cartItemDTO.getProductId());
 
-	@Override
-	public CartItems updateCartItem(Long userId, Long id, int quantity) throws CartNotFoundException, CartItemNotFoundException{
-		Cart cart = cartService.findUserCart(userId);
-		
-		if(cart == null) {
-			throw new CartNotFoundException();
+		Product product = productService.findProductById(cartItemDTO.getProductId());
+		if(product == null) {
+			logger.error("Product not found with ID: {}", cartItemDTO.getProductId());
+			throw new ProductNotFoundException();
 		}
 		
-		CartItems cartItem = cartItemRepository.findById(id).orElseThrow(() -> new CartItemNotFoundException());
+		Cart cart = cartService.findUserCart(userId);
+		
+		CartItems cartItem = new CartItems();
+		cartItem.setPrice(product.getPrice() * cartItemDTO.getQuantity());
+		cartItem.setDiscountPrice(product.getDiscountedPrice() * cartItemDTO.getQuantity());
+	
+		cartItem.setProduct(product);
+		cartItem.setSize(cartItemDTO.getSize());
+		cartItem.setCart(cart);
+		cartItem.setQuantitiy(cartItemDTO.getQuantity());
+				
+		return cartItemRepository.save(cartItem);
+	}
+
+	@Override
+	public CartItems updateCartItem(Long userId, Long itemId, int quantity) throws CartNotFoundException, CartItemNotFoundException, ProductNotFoundException{
+		logger.info("Updating cart item ID={} for userId={} with new quantity={}", itemId, userId, quantity);
+		
+		Cart cart = cartService.findUserCart(userId);		
+		if(cart == null) {
+			logger.error("Cart item not found with ID: {}", itemId);
+			throw new CartNotFoundException();
+		}
+				
+		CartItems cartItem = cartItemRepository.findById(itemId).orElseThrow(() -> new CartItemNotFoundException());
+		
+		Product product = cartItem.getProduct();
+		if(product == null) {
+			logger.error("Product associated with cart item is null");
+			throw new ProductNotFoundException();
+		}
+		
 		cartItem.setQuantitiy(quantity);
-		cartItem.setPrice(cartItem.getProduct().getPrice() * cartItem.getQuantitiy());
-		cartItem.setDiscountPrice(cartItem.getProduct().getDiscountedPrice() * cartItem.getQuantitiy());;
+		cartItem.setPrice(product.getPrice() * cartItem.getQuantitiy());
+		cartItem.setDiscountPrice(product.getDiscountedPrice() * cartItem.getQuantitiy());;
 
 		return cartItemRepository.save(cartItem);
 		
 	}
 
 	@Override
-	public CartItems isCartItemExists(Long cartId ,Product product, String size, Long userId) {
-		return cartItemRepository.isCartItemExist(cartId, product, size, userId);
+	public CartItems isCartItemExists(Long cartId ,Long productId, String size, Long userId) {
+		logger.debug("Checking if cart item exists for cartId={}, productId={}, size={}, userId={}",
+	            cartId, productId, size, userId);
+		return cartItemRepository.isCartItemExist(cartId, productId, size, userId);
 	}
 
 	//
 	@Override
 	public ResponseEntity<String> removeCartItem(Long userId, Long itemId) throws CartNotFoundException, CartItemNotFoundException{
+		logger.info("Removing cart item ID={} for userId={}", itemId, userId);
+		
 		Cart cart = cartService.findUserCart(userId);
 		
 		CartItems item = findCartItemById(itemId);
 		
 		cart.getCartItemsList().remove(item);
 		
+		cartItemRepository.deleteById(itemId);
+		
+		logger.info("Cart item ID={} removed successfully", itemId);
 		return new ResponseEntity<String>("Item Removed", HttpStatus.ACCEPTED);
 	}
 		
@@ -78,28 +115,33 @@ public class CartItemsServiceImpl implements ICartItemsService {
 
 	@Override
 	public CartItems findCartItemById(Long cartItemId) throws CartItemNotFoundException {
-		
+		logger.debug("Fetching cart item by ID: {}", cartItemId);
 		return cartItemRepository.findById(cartItemId).orElseThrow(() -> new CartItemNotFoundException());
 	}
 	
 	@Override
-	public CartItems addCartItem(Long userId, CartItemDTO dto) throws ProductNotFoundException, CartNotFoundException {
+	public CartItems addCartItem(Long userId, CartItemDTO cartItemDTO) 
+								throws ProductNotFoundException, CartNotFoundException, CartItemNotFoundException {
 
-		Cart cart = cartService.findByCartId(userId);
-		Product product = productService.findProductById(dto.getProductId());
+		logger.info("Adding new cart item for userId={} and productId={}", userId, cartItemDTO.getProductId());
 		
-		CartItems newItem = new CartItems();
-		newItem.setProduct(product);
-		newItem.setCart(cart);
-		newItem.setQuantitiy(dto.getQuantity());
-		newItem.setPrice(dto.getPrice());
-		newItem.setSize(dto.getSize());
+		Cart cart = cartService.findUserCart(userId);
+		
+		CartItems gotCartItem = isCartItemExists(cart.getCartId(), cartItemDTO.getProductId(), cartItemDTO.getSize(), userId);
+		
+		if(gotCartItem != null) {
+			logger.warn("Duplicate cart item exists for userId={} and productId={} with size={}",
+	                userId, cartItemDTO.getProductId(), cartItemDTO.getSize());
+			
+			throw new IllegalArgumentException("Product with same size exists in cart");
+		}
 		
 		//Possibly assigning an auto-generated ID (like a primary key)
 		//Saving newItem to the database (via repository)
-		CartItems createdItem = createCartItem(newItem);
+		CartItems createdItem = createCartItem(userId, cartItemDTO);
 		cart.getCartItemsList().add(createdItem);
 		
+		logger.info("Cart item added successfully with ID: {}", createdItem.getCartItemsId());
 		return createdItem;
 	}
 	
