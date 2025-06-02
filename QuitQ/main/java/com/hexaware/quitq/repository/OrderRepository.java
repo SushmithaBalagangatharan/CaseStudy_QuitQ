@@ -13,7 +13,6 @@ public interface OrderRepository  extends JpaRepository<Orders, Long>{
 	@Query("SELECT o FROM Orders o WHERE o.user.id = ?1")
 	public List<Orders> findUserOrders(Long userId);
 	
-	//public List<Orders> getByUserId(Long userId);
 	
 	@Query("SELECT o FROM Orders o WHERE o.user.id = :sellerId AND o.user.role = 'SELLER'")
 	public List<Orders> findOrdersBySellerId(@Param("sellerId") Long sellerId);

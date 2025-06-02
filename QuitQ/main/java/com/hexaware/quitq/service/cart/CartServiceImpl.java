@@ -31,13 +31,7 @@ public class CartServiceImpl implements ICartService{
 	@Autowired
 	UserRepository userRepository;
 
-	
-//	@Override
-//	public Cart createCart(UserDTO user) {
-//		Cart cart = new Cart();
-//		cart.setUser(user);
-//		return cartRepository.save(cart);
-//	}
+
 	
 	Logger logger = LoggerFactory.getLogger("CartServiceImpl.class");
 	
@@ -96,7 +90,6 @@ public class CartServiceImpl implements ICartService{
 		return cart;
 	}
 	
-
 
 	@Override
 	public Cart findByCartId(Long cartId) throws CartNotFoundException {

@@ -13,7 +13,7 @@ import com.hexaware.quitq.entity.UserInfo;
 
 public class UserInfoUserDetails implements UserDetails{
 
-	 private String name;
+	    private String name;
 	    private String password;
 	    private List<GrantedAuthority> authorities;
 

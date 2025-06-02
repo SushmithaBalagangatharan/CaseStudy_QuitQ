@@ -25,8 +25,7 @@ public class ProductServiceImpl implements IProductService {
 	@Autowired
 	ICategoryService categoryService;
 	
-//	@Autowired
-//	CategoryRepository categoryRepository;
+
 	
 	Logger logger = LoggerFactory.getLogger("ProductServiceImpl.class");
 	
@@ -110,58 +109,7 @@ public class ProductServiceImpl implements IProductService {
 		return productRepository.getProductByCategory(category) ;
 	}
 
-	@Override
-	public Page<Product> getAllProducts(String category, List<String> colors, List<String> size, Integer minPrice,
-			Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber, Integer pageSize) {
-		
-		return null;
-	}
-//
-//		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-//		
-//		List<Product> products =  productRepository.filterProducts(category, minPrice, maxPrice, minDiscount, sort);
-//		
-//		List<Product> productsList = new ArrayList<>();
-//		
-////		if(!colors.isEmpty()) {
-////			List<String> lowerCaseColors = colors.stream()
-////					.map(String::toLowerCase)
-////					.collect(Collectors.toList());
-////			
-////			products = products.stream()
-////					.filter(product -> lowerCaseColors.contains(product.getColor().toLowerCase()))
-////					.collect(Collectors.toList());
-////			
-////		}
-//		
-//		if (!colors.isEmpty()) {
-//		    products = products.stream()
-//		        .filter(p -> colors.stream()
-//		            .anyMatch(c -> c.equalsIgnoreCase(p.getColor())))
-//		        .collect(Collectors.toList());
-//		}
-//
-//		
-//		if(stock != null) {
-//			if(stock.equals("in_equals")) {
-//				for(Product product : products) {
-//					if(product.getQuantity() > 0) {productsList.add(product);}
-//				}
-//			}
-//			else if(stock.equals("out_of_stock")) {
-//				for(Product product : products) {
-//					if(product.getQuantity() < 1) {productsList.add(product);}
-//				}
-//			}
-//		}
-//		
-//		int startIndex = (int) pageable.getOffset();
-//		int endIndex = Math.min(startIndex+pageable.getPageSize(),products.size());
-//		
-//		List<Product> pageContent = products.subList(startIndex,  endIndex);
-//		
-//		return new PageImpl<>(pageContent, pageable, products.size()) ;
-//	}
+
 
 	@Override
 	public List<Product> findAllProducts() {

@@ -51,8 +51,5 @@ public class CategoryController {
 		return categoryService.getByLevel(level);
 	}
 	
-//	@GetMapping("/subcategory/{parentName}")
-//	public List<Category> getSubcategories(@PathVariable String parentName){
-//		return categoryService.getSubcategoryByParentName(parentName);
-//	}
+
 }

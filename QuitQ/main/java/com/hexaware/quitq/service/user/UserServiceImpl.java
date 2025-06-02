@@ -33,7 +33,6 @@ public class UserServiceImpl implements IUserService{
 	Logger logger = LoggerFactory.getLogger("UserServiceImpl.class");
 	
 	
-	
 	@Override
 	public UserInfo findUserById(Long userId) throws UserNotFoundException {
 		logger.info("Fetching user by user ID {}", userId);
@@ -75,6 +74,7 @@ public class UserServiceImpl implements IUserService{
         
         userRepository.save(userInfo);
         logger.info("Registered user {}", userInfo);
+        
 		return "Registered In successfully";
 	}
 

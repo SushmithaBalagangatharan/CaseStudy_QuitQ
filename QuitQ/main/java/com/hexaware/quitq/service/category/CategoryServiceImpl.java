@@ -39,6 +39,12 @@ public class CategoryServiceImpl implements ICategoryService{
 	@Override
 	public Category createSecondLevels(String secondLevelName, String topLevelName) {
 		 logger.info("Creating second-level category '{}' under top-level '{}'", secondLevelName, topLevelName);
+		 
+		 if (secondLevelName == null || topLevelName == null) {
+				logger.error("Category names cannot be null: thirdLevelName='{}', secondLevelName='{}'", secondLevelName, topLevelName); 
+				throw new IllegalArgumentException("Category names cannot be null. thirdLevelName=" + topLevelName + ", secondLevelName=" + topLevelName);
+		 }
+			 
 		
 		Category topLevel = categoryRepository.findByName(topLevelName);
 	    if (topLevel == null) {
@@ -102,9 +108,6 @@ public class CategoryServiceImpl implements ICategoryService{
 		return categoryRepository.findByLevel(level);
 	}
 	
-//	@Override
-//	public List<Category> getSubcategoryByParentName(String parentName){
-//		return categoryRepository.findByParentCategoryName(parentName);
-//	}
+
 	
 }

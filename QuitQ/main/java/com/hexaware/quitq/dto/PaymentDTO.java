@@ -2,11 +2,11 @@ package com.hexaware.quitq.dto;
 
 public class PaymentDTO {
 	private Long orderId;
-    private String paymentMethod; // e.g., "COD", "RAZORPAY", "STRIPE"
+    private String paymentMethod; 
     private double amount;
     private String currency;
-    private String transactionId; // for online gateways
-  //  private String paymentStatus; // "PENDING", "SUCCESS", etc.
+    private String transactionId; 
+
 	
     public PaymentDTO() {
 		super();
@@ -20,7 +20,7 @@ public class PaymentDTO {
 		this.amount = amount;
 		this.currency = currency;
 		this.transactionId = transactionId;
-		//this.paymentStatus = paymentStatus;
+		
 	}
 	
 	public Long getOrderId() {

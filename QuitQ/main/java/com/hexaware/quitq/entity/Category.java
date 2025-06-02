@@ -28,17 +28,6 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long categoryId;
 	
-	public List<Category> getSubcategories() {
-		return subcategories;
-	}
-
-	public void setSubcategories(List<Category> subcategories) {
-		this.subcategories = subcategories;
-	}
-
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
 
 	@Size(min=2, max=50, message = "name should be atleast 2 character")
 	@NotBlank(message="Name is required")
@@ -57,9 +46,7 @@ public class Category {
 	@JoinColumn(name="parent_category_id")
 	private Category parentCategory;
 	
-	@OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonBackReference
-	private List<Category> subcategories = new ArrayList<>();
+
 	
 	public Category() {
 		super();

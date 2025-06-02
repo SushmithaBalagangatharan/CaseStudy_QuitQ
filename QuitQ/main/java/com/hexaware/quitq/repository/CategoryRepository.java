@@ -12,7 +12,7 @@ public interface CategoryRepository  extends JpaRepository<Category, Long>{
 
 	public Category findByName(String name);
 	
-	@Query("Select c from Category c Where c.name= :name And c.parentCategory.categoryId = :parentCategoryId")
+	@Query("SELECT c FROM Category c WHERE c.name= :name AND c.parentCategory.categoryId = :parentCategoryId")
     Category findByNameAndParent(@Param("name") String name, @Param("parentCategoryId") Long parentCategoryId);
 	
 	
@@ -20,6 +20,4 @@ public interface CategoryRepository  extends JpaRepository<Category, Long>{
 	List<Category> findByLevel(@Param("level") int level);
 	
 	
-//	@Query("SELECT c FROM Category c WHERE parent_category_id = (SELECT category_id FROM category WHERE name = :name)")
-//	List<Category> findByParentCategoryName(@Param("name") String name);
 }

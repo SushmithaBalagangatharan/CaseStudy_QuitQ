@@ -1,5 +1,8 @@
 package com.hexaware.quitq.entity;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Size {
 
 	private String name;

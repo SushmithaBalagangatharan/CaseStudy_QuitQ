@@ -35,7 +35,6 @@ public class CartItemsServiceImpl implements ICartItemsService {
 	
 	Logger logger = LoggerFactory.getLogger("CartItemServiceImpl.class");
 	
-//quantity, size, cart_id
 	@Override
 	public CartItems createCartItem(Long userId, CartItemDTO cartItemDTO) throws ProductNotFoundException, CartItemNotFoundException, CartNotFoundException {
 		

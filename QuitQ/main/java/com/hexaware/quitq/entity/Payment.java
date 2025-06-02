@@ -36,16 +36,6 @@ public class Payment {
 	private double amount;
 	private String transactionId;
 	
-//	private String cardHolderName;
-//	
-//	@Size(min=15, max=16, message="Card number must contain minimum of 15 digits")
-//	private String cardNumber;
-//	
-//	private LocalDateTime expirationDate;
-//	
-//	@NotNull
-//	private String cvv;
-	
 	
 	@OneToOne(mappedBy = "payment")
 	@JsonBackReference

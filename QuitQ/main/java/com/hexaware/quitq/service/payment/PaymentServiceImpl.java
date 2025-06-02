@@ -56,7 +56,7 @@ public class PaymentServiceImpl implements IPaymentService {
 	        payment.setAmount(paymentDTO.getAmount());
 	        payment.setPaymentMethod(paymentDTO.getPaymentMethod());
 	        payment.setStatus("PAID");
-	        payment.setTransactionId(paymentDTO.getTransactionId());
+	        payment.setTransactionId("TRK"+System.currentTimeMillis());
 	        payment.setPaymentDate(LocalDateTime.now());
 	      
 	        Payment savedPayment = paymentRepository.save(payment);

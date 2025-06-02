@@ -54,6 +54,7 @@ public class AddressServiceImpl implements IAddressService {
 		}
 		
 		addressRepository.deleteById(addressId);
+		
 		logger.info("Successfully deleted address with ID: {}", addressId);
 		return new ResponseEntity<String>("Address Deleted Successfully", HttpStatus.OK);
 	}

@@ -108,7 +108,7 @@ public class OrderServiceImpl implements IOrderService{
 	@Override
 	public OrderDTO createOrder(UserInfo user, Address shippingAddress) throws CartNotFoundException, UserNotFoundException, CartItemNotFoundException {
 				
-		userRepository.findById(null).orElseThrow(() -> new UserNotFoundException());
+		userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException());
 		
 		Cart cart = cartService.findUserCart(user.getId());
 		

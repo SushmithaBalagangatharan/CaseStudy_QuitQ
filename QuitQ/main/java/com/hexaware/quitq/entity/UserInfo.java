@@ -25,12 +25,12 @@ public class UserInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-//	@Size(min = 2, max = 30, message = "First name must be between 2 and 30 characters")
+	
 	private String userName;
+	
 	@Email
 	private String email;
 	
-//	@Size(min = 8, max = 20, message = "Password must be between 8 and 20 characters")
 	private String password;
 	
 	private String gender;
