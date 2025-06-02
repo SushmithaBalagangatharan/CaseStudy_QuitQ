@@ -2,8 +2,6 @@ package com.hexaware.quitq.dto;
 
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.Pattern;
-
 public class OrderDTO {
 
 	private String orderId;

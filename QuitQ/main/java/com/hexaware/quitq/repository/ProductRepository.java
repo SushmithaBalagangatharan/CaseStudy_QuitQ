@@ -16,5 +16,5 @@ public interface ProductRepository  extends JpaRepository<Product, Long>{
 	public List<Product> getProductByCategory(@Param("category") String category);
 	
 
-
+	List<Product> findByIsDeletedFalse();
 }

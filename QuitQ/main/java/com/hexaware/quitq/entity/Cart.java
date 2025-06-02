@@ -27,6 +27,7 @@ public class Cart {
 	
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private UserInfo user;
 	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)

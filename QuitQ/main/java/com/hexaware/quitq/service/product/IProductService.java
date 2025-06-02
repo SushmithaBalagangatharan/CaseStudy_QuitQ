@@ -2,8 +2,6 @@ package com.hexaware.quitq.service.product;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import com.hexaware.quitq.dto.ProductDTO;
 import com.hexaware.quitq.entity.Product;
 import com.hexaware.quitq.entity.UserInfo;

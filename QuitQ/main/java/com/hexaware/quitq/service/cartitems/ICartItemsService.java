@@ -4,8 +4,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.hexaware.quitq.dto.CartItemDTO;
 import com.hexaware.quitq.entity.CartItems;
-import com.hexaware.quitq.entity.Product;
-import com.hexaware.quitq.entity.UserInfo;
 import com.hexaware.quitq.exception.CartItemNotFoundException;
 import com.hexaware.quitq.exception.CartNotFoundException;
 import com.hexaware.quitq.exception.ProductNotFoundException;

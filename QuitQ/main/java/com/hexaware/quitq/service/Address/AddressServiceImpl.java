@@ -17,6 +17,13 @@ import com.hexaware.quitq.service.user.IUserService;
 
 import jakarta.transaction.Transactional;
 
+/*
+ * @author Sushmitha B A
+ * @description  Address Service class which contains methods performing CRUD operations on Address of the USER.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @Service
 public class AddressServiceImpl implements IAddressService {
 	
@@ -31,12 +38,7 @@ public class AddressServiceImpl implements IAddressService {
 	public Address findAddressById(Long id) throws AddressNotFoundException {
 		logger.info("Attempting to find address with id: {}", id);
 		 
-		//return addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException());
-		
-		return addressRepository.findById(id).orElseThrow(() -> {
-            logger.error("Address not found for ID: {}", id);
-            return new AddressNotFoundException();
-        });
+		return addressRepository.findById(id).orElseThrow(() -> new AddressNotFoundException());
 	}
 
 	@Transactional

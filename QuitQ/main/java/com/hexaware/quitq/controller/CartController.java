@@ -21,6 +21,14 @@ import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.service.cart.ICartService;
 import com.hexaware.quitq.service.user.IUserService;
 
+
+/*
+ * @author Sushmitha B A
+ * @description Cart ReST Controller which contains end-points to handle HTTP request and provide response
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @RestController
 @RequestMapping("/api/cart")
 public class CartController {

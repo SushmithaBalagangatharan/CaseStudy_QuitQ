@@ -20,6 +20,14 @@ import com.hexaware.quitq.service.cart.ICartService;
 import com.hexaware.quitq.service.product.IProductService;
 import com.hexaware.quitq.service.user.IUserService;
 
+/*
+ * @author Sushmitha B A
+ * @description CartItems Service class which contains methods performing CRUD operations on cartItems of the USER.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
+
 @Service
 public class CartItemsServiceImpl implements ICartItemsService {
 

@@ -14,6 +14,12 @@ import com.hexaware.quitq.entity.OrderItems;
 import com.hexaware.quitq.exception.OrderItemNotFoundException;
 import com.hexaware.quitq.repository.OrderItemRepository;
 
+/*
+ * @author Sushmitha B A
+ * @description OrderItems Service class which contains methods creating order items.
+ * @date 2-06-2025
+ * @version 1.0
+ */
 
 @Service
 public class OrderItemsServiceImpl implements IOrderItemService {

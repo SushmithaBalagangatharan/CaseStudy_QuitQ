@@ -21,6 +21,14 @@ import com.hexaware.quitq.service.product.IProductService;
 
 import jakarta.transaction.Transactional;
 
+/*
+ * @author Sushmitha B A
+ * @description Cart Service class which contains methods performing CRUD operations on cart of the USER.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
+
 @Service
 public class CartServiceImpl implements ICartService{
 
@@ -60,7 +68,7 @@ public class CartServiceImpl implements ICartService{
 			logger.warn("Cart not found for userId: {}", userId);
 			throw new CartNotFoundException();
 		}
-//		User adds/removes cart items	Only cart items are updated (not always the summary)
+//		User adds/removes cart items.Only cart items are updated (not always the summary)
 //		User opens their cart	findUserCart(userId) is called, recalculates totals
 	
 		Integer totalPrice = 0;

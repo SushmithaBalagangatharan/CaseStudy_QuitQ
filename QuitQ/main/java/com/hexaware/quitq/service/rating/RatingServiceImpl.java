@@ -19,6 +19,14 @@ import com.hexaware.quitq.repository.RatingRepository;
 import com.hexaware.quitq.service.product.IProductService;
 import com.hexaware.quitq.service.user.IUserService;
 
+/*
+ * @author Sushmitha B A
+ * @description Cart Service class which contains methods for creating and fetching product ratings.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
+
 @Service
 public class RatingServiceImpl implements IRatingService {
 	

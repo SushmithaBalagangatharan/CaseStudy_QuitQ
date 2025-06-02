@@ -1,11 +1,12 @@
 package com.hexaware.quitq.entity;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,6 +37,7 @@ public class CartItems {
 	
 	@ManyToOne
 	@JoinColumn(name = "product_id", nullable = false)
+//	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Product product;
 
 	public CartItems() {

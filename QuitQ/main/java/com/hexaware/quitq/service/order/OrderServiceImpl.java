@@ -29,6 +29,13 @@ import com.hexaware.quitq.repository.UserRepository;
 import com.hexaware.quitq.service.cart.ICartService;
 import com.hexaware.quitq.service.orderitem.IOrderItemService; 
 
+/*
+ * @author Sushmitha B A
+ * @description Order Service class which contains methods performing CRUD operations on order of the USER.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 
 @Transactional
 @Service
@@ -258,21 +265,4 @@ public class OrderServiceImpl implements IOrderService{
 		return orderDTO;
 	}
 
-//    for(CartItems cartItem : cart.getCartItemsList()) {
-//	OrderItems orderItem = new OrderItems();
-//	orderItem.setPrice(cartItem.getPrice());
-//    orderItem.setProduct(cartItem.getProduct());
-//    orderItem.setQuantity(cartItem.getQuantitiy());
-//    orderItem.setSize(cartItem.getSize());
-//    orderItem.setDiscountedPrice(cartItem.getDiscountPrice());
-//    
-//    OrderItems savedOrderItems = orderItemRepository.save(orderItem);
-//    orderItems.add(savedOrderItems);
-//}
-	
-	
-//	orderId → a unique, human-readable, business-specific ID that is:
-//		shown in the UI
-//		included in invoices or confirmation emails
-//		used by customers or support staff to track or reference orders
 }

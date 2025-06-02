@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hexaware.quitq.entity.Category;
 import com.hexaware.quitq.service.category.ICategoryService;
 
+/*
+ * @author Sushmitha B A
+ * @description Category ReST Controller which contains end-points to handle HTTP request and provide response
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
+
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {

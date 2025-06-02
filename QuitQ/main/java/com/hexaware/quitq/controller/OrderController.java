@@ -31,6 +31,13 @@ import com.hexaware.quitq.service.Address.IAddressService;
 import com.hexaware.quitq.service.order.IOrderService;
 import com.hexaware.quitq.service.user.IUserService;
 
+/*
+ * @author Sushmitha B A
+ * @description Order ReST Controller which contains end-points to handle HTTP request and provide response
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {

@@ -19,6 +19,13 @@ import com.hexaware.quitq.repository.OrderRepository;
 import com.hexaware.quitq.repository.PaymentRepository;
 import com.hexaware.quitq.service.order.IOrderService;
 
+/*
+ * @author Sushmitha B A
+ * @description Payment Service class which contains methods performing CRUD operations on payment of the USER.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @Service
 public class PaymentServiceImpl implements IPaymentService {
 	

@@ -18,6 +18,13 @@ import com.hexaware.quitq.exception.OrderItemNotFoundException;
 import com.hexaware.quitq.service.cart.ICartService;
 import com.hexaware.quitq.service.orderitem.IOrderItemService;
 
+/*
+ * @author Sushmitha B A
+ * @description Order Items ReST Controller which contains end-points to handle HTTP request and provide response
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @RestController
 @RequestMapping("/api/order_items")
 public class OrderItemController {

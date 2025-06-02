@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 @Entity
@@ -26,11 +27,14 @@ public class UserInfo {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@NotBlank(message = "Username is required")
 	private String userName;
 	
-	@Email
+	@NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
 	private String email;
 	
+	@NotBlank(message = "Password is required")
 	private String password;
 	
 	private String gender;
@@ -39,6 +43,7 @@ public class UserInfo {
 	
 	private LocalDate createdAt;
 	
+	@NotBlank(message = "Role is required")
 	@Pattern(regexp="ADMIN|USER|SELLER")
 	private String role;
 	

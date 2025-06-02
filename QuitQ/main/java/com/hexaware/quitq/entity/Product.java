@@ -45,17 +45,21 @@ public class Product {
 	private LocalDateTime createdAt;
 	private int numOfRatings;
 	
+	private boolean isDeleted;
 
-	@Embedded
+
+
+	//@Embedded
 	@ElementCollection
 	private Set<Size> sizes = new HashSet<>();
 	
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonBackReference("product-rating")
 	private List<Rating> ratings = new ArrayList<>();
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@JsonBackReference
 	private UserInfo user; //seller
 	
 	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
@@ -305,6 +309,16 @@ public class Product {
 	}
 
 
+	public boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+
+	public void setIsDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	
 	
 	
 }

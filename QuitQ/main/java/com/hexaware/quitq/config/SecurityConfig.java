@@ -32,13 +32,7 @@ public class SecurityConfig {
     @Bean
     //authentication
     public UserDetailsService userDetailsService() {
-		/*
-		 * UserDetails admin = User.withUsername("Basant")
-		 * .password(encoder.encode("Pwd1")) .roles("ADMIN") .build(); UserDetails user
-		 * = User.withUsername("John") .password(encoder.encode("Pwd2"))
-		 * .roles("USER","ADMIN","HR") .build(); return new
-		 * InMemoryUserDetailsManager(admin, user);
-		 */
+		
        return new UserInfoUserDetailsService();
     }
     
@@ -46,7 +40,13 @@ public class SecurityConfig {
     public  SecurityFilterChain   getSecurityFilterChain(HttpSecurity http) throws Exception {
     	
     		return http.csrf().disable()
-    			.authorizeHttpRequests().requestMatchers("/api/user/register","/api/user/login/auth", "/api/user/message")
+    			.authorizeHttpRequests().requestMatchers("/api/user/register","/api/user/login/auth", "/api/user/message",
+    					"/v3/api-docs/**",
+    				    "/swagger-ui/**",
+    				    "/swagger-ui.html",
+    				    "/swagger-resources/**",
+    				    "/webjars/**",
+    				    "/configuration/**")
     			.permitAll()
     			.and()
     			.authorizeHttpRequests().requestMatchers("/api/**")
@@ -60,6 +60,8 @@ public class SecurityConfig {
     	
     }
     
+
+
     
     
     

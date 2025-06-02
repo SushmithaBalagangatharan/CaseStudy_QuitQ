@@ -15,6 +15,13 @@ import com.hexaware.quitq.repository.UserRepository;
 import com.hexaware.quitq.service.JwtService;
 import com.hexaware.quitq.service.cart.ICartService;
 
+/*
+ * @author Sushmitha B A
+ * @description User Service class which contains methods which handles registration of user along with basic operations.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @Service
 public class UserServiceImpl implements IUserService{
 	

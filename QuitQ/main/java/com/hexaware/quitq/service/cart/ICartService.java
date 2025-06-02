@@ -2,7 +2,6 @@ package com.hexaware.quitq.service.cart;
 
 import org.springframework.http.ResponseEntity;
 
-import com.hexaware.quitq.dto.UserDTO;
 import com.hexaware.quitq.entity.Cart;
 import com.hexaware.quitq.exception.CartItemNotFoundException;
 import com.hexaware.quitq.exception.CartNotFoundException;

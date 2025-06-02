@@ -10,6 +10,14 @@ import org.springframework.stereotype.Service;
 import com.hexaware.quitq.entity.Category;
 import com.hexaware.quitq.repository.CategoryRepository;
 
+/*
+ * @author Sushmitha B A
+ * @description Category Service class which contains methods creating categories for product.
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
+
 @Service
 public class CategoryServiceImpl implements ICategoryService{
 

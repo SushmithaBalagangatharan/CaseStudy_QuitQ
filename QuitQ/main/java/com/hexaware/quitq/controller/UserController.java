@@ -26,14 +26,18 @@ import com.hexaware.quitq.exception.UserNotFoundException;
 import com.hexaware.quitq.service.JwtService;
 import com.hexaware.quitq.service.user.IUserService;
 
+/*
+ * @author Sushmitha B A
+ * @description User ReST Controller which contains end-points to handle HTTP request and provide response and provide authorization and authentication to user
+ * @date 2-06-2025
+ * @version 1.0
+ */
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 	@Autowired
     IUserService userService;
-
-//    @Autowired
-//    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     AuthenticationManager authenticationManager;
